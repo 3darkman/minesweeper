@@ -1,0 +1,4 @@
+﻿  Grid.cpp
+C:\Users\Kirlian Silvestre\source\repos\minesweeper\Minesweeper\Minesweeper\Grid.cpp(65,20): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\Kirlian Silvestre\source\repos\minesweeper\Minesweeper\Minesweeper\Grid.cpp(67,21): warning C4018: '<': incompatibilidade de signed/unsigned
+  Minesweeper.vcxproj -> C:\Users\Kirlian Silvestre\source\repos\minesweeper\Minesweeper\Debug\Minesweeper.exe
