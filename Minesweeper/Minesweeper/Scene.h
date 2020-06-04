@@ -11,6 +11,7 @@ namespace ks
 	protected:
 		std::multiset<GameObject*> gameObjects;
 	public:
+		virtual ~Scene() = default;
 		virtual void Init() = 0;
 		virtual void HandleInput() = 0;
 		virtual void Update(float deltaTime) = 0;
@@ -19,5 +20,4 @@ namespace ks
 		virtual void Pause() {}
 		virtual void Resume() {}
 	};
-	
 }

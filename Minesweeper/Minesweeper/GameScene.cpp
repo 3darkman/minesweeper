@@ -26,7 +26,7 @@ void ks::GameScene::Init()
 {
 	this->LoadAssets();
 
-	this->grid = new Grid(GRID_COLUMNS, GRID_ROWS, sf::Vector2f(0, 88), this->data);
+	this->grid = new Grid(GRID_COLUMNS, GRID_ROWS, sf::Vector2i(0, 88), this->data);
 	
 	this->grid->Init();
 }
@@ -37,9 +37,22 @@ void ks::GameScene::HandleInput()
 
 	while (this->data->window.pollEvent(event))
 	{
-		if (sf::Event::Closed == event.type)
+		if (event.type == sf::Event::Closed)
 		{
 			this->data->window.close();
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			if (this->data->input.IsRectClicked(this->grid->GetGlobalBounds(), sf::Mouse::Left, this->data->window, event.mouseButton))
+			{
+				this->grid->ProcessClick(this->data->input.GetMousePosition(this->data->window));
+			}
+
+			if (this->data->input.IsRectClicked(this->grid->GetGlobalBounds(), sf::Mouse::Right, this->data->window, event.mouseButton))
+			{
+				this->grid->PutFlag(this->data->input.GetMousePosition(this->data->window));
+			}
 		}
 	}
 }

@@ -26,18 +26,21 @@ namespace ks
 	public:
 		GridBlock(Grid* grid, sf::Vector2i gridPosition, BlockType type, GameDataRef data);
 		GridBlock(Grid* grid, sf::Vector2i gridPosition, GameDataRef data);
-		void ChangeState(BlockState newState);
 		void Init() override;
 		void Update(float deltaTime) override {};
 		void Draw(float deltaTime) override;
-		void Flag(bool isFlagged);
-		void Flip();
+		void ToggleFlag();
+		bool Flip(bool canExplodeBombs);
 		void SetType(BlockType type);
-		BlockType GetType();
+		BlockType GetType() const;
+		BlockState GetState() const;
 		void AddNeighboringBomb();
+		sf::Vector2i GetGridPosition() const;
 				
 	private:
-		sf::Texture& GetFaceUpTexture();
+		sf::Texture& GetFaceUpTexture(bool canExplodeBombs) const;
+		void ChangeSprite(bool canExplodeBombs);
+		void ChangeState(BlockState newState, bool canExplodeBombs);
 		BlockType type;
 		int neighboringBombs;
 		BlockState state;
