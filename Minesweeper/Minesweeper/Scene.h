@@ -1,15 +1,23 @@
 #pragma once
-#include <iostream>
-#include <set>
-
-#include "GameObject.h"
+#include "SFML/Graphics.hpp"
 
 namespace ks
 {
+	enum class AnchorType
+	{
+		Top,
+		TopLeft,
+		TopRight,
+		Center,
+		CenterLeft,
+		CenterRight,
+		Bottom,
+		BottomLeft,
+		BottomRight
+	};
+	
 	class Scene
 	{
-	protected:
-		std::multiset<GameObject*> gameObjects;
 	public:
 		virtual ~Scene() = default;
 		virtual void Init() = 0;
@@ -19,5 +27,7 @@ namespace ks
 
 		virtual void Pause() {}
 		virtual void Resume() {}
+
+		void AnchorObject(sf::RenderWindow& window, sf::Transformable& object, sf::FloatRect bounds, AnchorType anchor, sf::Vector2i offset) const;
 	};
 }

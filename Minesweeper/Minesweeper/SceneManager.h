@@ -2,7 +2,6 @@
 #include <memory>
 #include <stack>
 
-
 #include "Scene.h"
 
 namespace ks

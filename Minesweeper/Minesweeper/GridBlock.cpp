@@ -6,7 +6,6 @@ void ks::GridBlock::Init()
 {
 	position.x = gridPosition.x * GRID_BLOCK_SIZE + this->gridParent->GetPosition().x;
 	position.y = gridPosition.y * GRID_BLOCK_SIZE + this->gridParent->GetPosition().y;
-	sortOrder = 1;
 	this->sprite.setPosition(position);
 	ChangeState(BlockState::Hidden, false);
 }
@@ -32,6 +31,29 @@ bool ks::GridBlock::Flip(bool canExplodeBombs)
 		return true;
 	}
 	return false;
+}
+
+void ks::GridBlock::Show(bool ignoreFlag)
+{
+	switch (this->state)
+	{
+	case BlockState::Hidden:
+		this->ChangeState(BlockState::FaceUp, false);
+		break;
+	case BlockState::Flagged:
+		if (ignoreFlag)
+		{
+			this->ChangeState(BlockState::FaceUp, false);
+		}
+		else
+		{
+			if (this->type != BlockType::Bomb)
+			{
+				this->ChangeState(BlockState::MissFlagged, false);
+			}
+		}
+		break;
+	}
 }
 
 void ks::GridBlock::SetType(BlockType type)
@@ -143,6 +165,10 @@ void ks::GridBlock::ChangeSprite(bool canExplodeBombs)
 	case BlockState::Flagged:
 		this->sprite.setTexture(this->data->assets.GetTexture(SPRITE_BLOCK_FLAG_NAME));
 		break;
+	case BlockState::MissFlagged:
+		this->sprite.setTexture(this->data->assets.GetTexture(SPRITE_BLOCK_FLAG_MISS_NAME));
+		break;
+		
 	}
 }
 

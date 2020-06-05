@@ -1,10 +1,6 @@
 #include "Grid.h"
 #include "DEFINITIONS.h"
-#include "GameOverScene.h"
 
-/**
- *	Creates all GridBlock instances according to the grid size.
- */
 void ks::Grid::CreateBlocks()
 {
 	for (int x = 0; x < this->size.x; x++)
@@ -20,11 +16,6 @@ void ks::Grid::CreateBlocks()
 	}
 }
 
-/**
- * Defines the types of all instances of the grid blocks and initializes them.
- *
- * @param bombs Container containing all bombs positions on the grid.
- */
 void ks::Grid::InitializeBlocks(const std::vector<sf::Vector2i>& bombs)
 {
 	for (auto bomb : bombs)
@@ -51,23 +42,16 @@ void ks::Grid::InitializeBlocks(const std::vector<sf::Vector2i>& bombs)
 	}
 }
 
-/**
- * Initializes the grid by creating its blocks and setting its types.
- */
 void ks::Grid::Init()
 {
-	auto bombs = this->DefineBombsPositions();
+	this->revealedBlocks = 0;
+	auto bombs = this->SelectRandomPositions(NUMBER_OF_BOMBS);
 	
 	this->CreateBlocks();
 
 	this->InitializeBlocks(bombs);
 }
 
-/**
- * Place a flag on the block in the indicated position.
- *
- * @param position Pixel position relative to the window, where the block is.
- */
 void ks::Grid::PutFlag(const sf::Vector2i position)
 {
 	auto gridPosition = this->WindowToGridPosition(position);
@@ -75,11 +59,6 @@ void ks::Grid::PutFlag(const sf::Vector2i position)
 	this->gridBlocks[gridPosition.x][gridPosition.y].ToggleFlag();
 }
 
-/**
- * Draws the object and its children in the current window.
- *
- * @param deltaTime Time passed from the last frame so far.
- */
 void ks::Grid::Draw(float deltaTime)
 {
 	for (int x = 0; x < this->gridBlocks.size(); x++)
@@ -91,9 +70,10 @@ void ks::Grid::Draw(float deltaTime)
 	}
 }
 
-void ks::Grid::FlipNeighbors(ks::GridBlock& block)
+bool ks::Grid::FlipNeighbors(ks::GridBlock& block)
 {
-	this->FlipBlock(block);
+	auto isAbomb = this->FlipBlock(block);
+	this->revealedBlocks++;
 	
 	if (block.GetType() == BlockType::Empty)
 	{
@@ -111,6 +91,7 @@ void ks::Grid::FlipNeighbors(ks::GridBlock& block)
 			}
 		}
 	}
+	return isAbomb;
 }
 
 sf::Vector2i ks::Grid::WindowToGridPosition(sf::Vector2i position) const
@@ -121,13 +102,24 @@ sf::Vector2i ks::Grid::WindowToGridPosition(sf::Vector2i position) const
 	};
 }
 
-void ks::Grid::ProcessClick(sf::Vector2i position)
+bool ks::Grid::ProcessClick(sf::Vector2i position)
 {
 	const auto gridPosition = this->WindowToGridPosition(position);
 
 	GridBlock* block = &gridBlocks[gridPosition.x][gridPosition.y];
 
-	this->FlipNeighbors(*block);
+	return this->FlipNeighbors(*block);
+}
+
+void ks::Grid::ShowsGridResult()
+{
+	for (int x = 0; x < this->size.x; x++)
+	{
+		for (int y = 0; y < this->size.y; y++)
+		{
+			gridBlocks[x][y].Show(false);
+		}
+	}
 }
 
 sf::Vector2i ks::Grid::GetPosition() const
@@ -137,52 +129,54 @@ sf::Vector2i ks::Grid::GetPosition() const
 
 sf::IntRect ks::Grid::GetGlobalBounds() const
 {
-	return sf::IntRect(this->position, sf::Vector2i(GRID_COLUMNS * GRID_BLOCK_SIZE, GRID_ROWS * GRID_BLOCK_SIZE));
+	return sf::IntRect(this->position, sf::Vector2i(this->size.x * GRID_BLOCK_SIZE, this->size.y * GRID_BLOCK_SIZE));
 }
 
-std::vector<sf::Vector2i> ks::Grid::DefineBombsPositions()
+int ks::Grid::GetRevealedBlocks()
 {
-	std::vector<sf::Vector2i> bombs;
+	return this->revealedBlocks;
+}
 
-	int bombsNumber = 0;
+std::vector<sf::Vector2i> ks::Grid::SelectRandomPositions(int numberOfPositions) const
+{
+	std::vector<sf::Vector2i> positions;
+
+	int positionsSelected = 0;
 
 	do
 	{
-		int x = rand() % GRID_COLUMNS;
-		int y = rand() % GRID_ROWS;
+		int x = rand() % this->size.x;
+		int y = rand() % this->size.y;
 		sf::Vector2i position(x, y);
 
-		auto results = std::find(bombs.begin(), bombs.end(), position);
+		auto results = std::find(positions.begin(), positions.end(), position);
 
-		if (results == bombs.end())
+		if (results == positions.end())
 		{
-			bombs.push_back(position);
-			bombsNumber++;
+			positions.push_back(position);
+			positionsSelected++;
 		}
-	} while (bombsNumber < NUMBER_OF_BOMBS);
+	} while (positionsSelected < numberOfPositions);
 
-	return bombs;
+	return positions;
 }
 
-void ks::Grid::FlipBlock(GridBlock& block)
+bool ks::Grid::FlipBlock(GridBlock& block) const
 {
-	bool flipped = block.Flip(true);
+	const bool flipped = block.Flip(true);
 
-	if (flipped && block.GetType() == BlockType::Bomb)
-	{
-		this->data->scenes.AddScene(SceneRef(new GameOverScene(this->data)), true);
-	}
+	return flipped && block.GetType() == BlockType::Bomb;
 }
 
 void ks::Grid::GetNeighbors(sf::Vector2i position, std::vector<GridBlock*>& neighbors)
 {
 	for (int x = position.x - 1; x <= position.x + 1; x++)
 	{
-		if (x >= 0 && x < GRID_COLUMNS)
+		if (x >= 0 && x < this->size.x)
 		{
 			for (int y = position.y - 1; y <= position.y + 1; y++)
 			{
-				if (y >= 0 && y < GRID_ROWS && gridBlocks[x][y].GetType() != BlockType::Bomb)
+				if (y >= 0 && y < this->size.y && gridBlocks[x][y].GetType() != BlockType::Bomb)
 				{
 					if (x != position.x  || y != position.y)
 					{

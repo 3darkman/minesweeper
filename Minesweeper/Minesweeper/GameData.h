@@ -1,7 +1,6 @@
 #pragma once
 #include "AssetManager.h"
 #include "InputManager.h"
-#include "Scene.h"
 #include "SceneManager.h"
 #include "SFML/Graphics.hpp"
 

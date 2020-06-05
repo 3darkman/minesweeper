@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
@@ -48,14 +45,11 @@
     <ClCompile Include="GameOverScene.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonGameObject.cpp">
+    <ClCompile Include="MainMenuScene.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObject.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -89,7 +83,7 @@
     <ClInclude Include="GameOverScene.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonGameObject.h">
+    <ClInclude Include="MainMenuScene.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

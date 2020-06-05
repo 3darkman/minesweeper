@@ -9,6 +9,8 @@
 
 #define NUMBER_OF_BOMBS 40
 
+#define TIME_BEFORE_SHOW_GAME_OVER  3
+
 #define SPRITE_BLOCK_01_FILEPATH "graphics/block_1.png"
 #define SPRITE_BLOCK_02_FILEPATH "graphics/block_2.png"
 #define SPRITE_BLOCK_03_FILEPATH "graphics/block_3.png"
@@ -22,6 +24,7 @@
 #define SPRITE_BLOCK_BOMB_FILEPATH  "graphics/block_bomb.png"
 #define SPRITE_BLOCK_BOMB_SPLASH_FILEPATH  "graphics/block_bomb_splash.png"
 #define SPRITE_BLOCK_FLAG_FILEPATH  "graphics/block_flag.png"
+#define SPRITE_BLOCK_FLAG_MISS_FILEPATH  "graphics/block_flag_miss.png"
 
 #define SPRITE_BLOCK_01_NAME "B01"
 #define SPRITE_BLOCK_02_NAME "B02"
@@ -36,6 +39,7 @@
 #define SPRITE_BLOCK_BOMB_NAME "BBOMB"
 #define SPRITE_BLOCK_BOMB_SPLASH_NAME "BSPLASH"
 #define SPRITE_BLOCK_FLAG_NAME "BFLAG"
+#define SPRITE_BLOCK_FLAG_MISS_NAME "BMISS"
 
 #define FONT_GAME_SANS_NAME "game_sans"
 #define FONT_GAME_SANS_FILEPATH "fonts/game_sans_serif_7.ttf"

@@ -1,5 +1,4 @@
 #pragma once
-#include "GameObject.h"
 #include "GameData.h"
 
 namespace ks
@@ -18,19 +17,20 @@ namespace ks
 	{
 		Hidden,
 		FaceUp,
-		Flagged
+		Flagged,
+		MissFlagged
 	};
 	
-	class GridBlock : GameObject
+	class GridBlock
 	{
 	public:
 		GridBlock(Grid* grid, sf::Vector2i gridPosition, BlockType type, GameDataRef data);
 		GridBlock(Grid* grid, sf::Vector2i gridPosition, GameDataRef data);
-		void Init() override;
-		void Update(float deltaTime) override {};
-		void Draw(float deltaTime) override;
+		void Init();
+		void Draw(float deltaTime);
 		void ToggleFlag();
 		bool Flip(bool canExplodeBombs);
+		void Show(bool ignoreFlag);
 		void SetType(BlockType type);
 		BlockType GetType() const;
 		BlockState GetState() const;

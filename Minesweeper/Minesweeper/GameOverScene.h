@@ -14,7 +14,8 @@ namespace ks
 		void Draw(float deltaTime) override;
 	private:
 		GameDataRef data;
-		sf::Text gameOverText;
+		sf::Text* gameOverText;
+		sf::Text* hintText;
 	};
 }
 
