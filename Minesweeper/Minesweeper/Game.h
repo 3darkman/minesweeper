@@ -12,7 +12,7 @@ namespace ks
 	private:
 		const float deltaTime = 1.0f / 60.0f;
 
-		sf::Clock _clock;
+		sf::Clock clock;
 
 		GameDataRef data = std::make_shared<GameData>();
 

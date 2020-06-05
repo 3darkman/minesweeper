@@ -1,9 +1,11 @@
 #include "GameOverScene.h"
 #include "DEFINITIONS.h"
 #include "GameScene.h"
+#include "MainMenuScene.h"
 
 ks::GameOverScene::GameOverScene(GameDataRef data) : data(data)
 {
+	this->data->window.create(sf::VideoMode(INTERMEDIATE_SCREEN_WIDTH, INTERMEDIATE_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
 }
 
 void ks::GameOverScene::Init()
@@ -33,8 +35,13 @@ void ks::GameOverScene::HandleInput()
 		{
 			if (event.key.code == sf::Keyboard::Enter)
 			{
-				this->data->scenes.AddScene(SceneRef(new GameScene(this->data)), true);
+				this->data->scenes.AddScene(SceneRef(new MainMenuScene(this->data)), true);
 			}
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			this->data->scenes.AddScene(SceneRef(new MainMenuScene(this->data)), true);
 		}
 	}
 }
@@ -45,7 +52,7 @@ void ks::GameOverScene::Update(float deltaTime)
 
 void ks::GameOverScene::Draw(float deltaTime)
 {
-	this->data->window.clear(sf::Color::Black);
+	this->data->window.clear(sf::Color(45,43,43));
 
 	this->data->window.draw(*this->gameOverText);
 	this->data->window.draw(*this->hintText);

@@ -25,6 +25,7 @@ namespace ks
 		void Draw(float deltaTime) override;
 	private:
 		void LoadAssets() const;
+		void CreateGrid();
 		GameDataRef data;
 		GameState state;
 		
@@ -34,5 +35,10 @@ namespace ks
 
 		sf::Text* victoryText;
 		sf::Text* hintText;
+
+		sf::Sprite background;
+		sf::Sprite logo;
+
+		bool canClickToRestart;
 	};
 }

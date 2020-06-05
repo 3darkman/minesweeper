@@ -75,7 +75,15 @@ namespace ks
 		 */
 		sf::IntRect GetGlobalBounds() const;
 
-		int GetRevealedBlocks();
+		int GetRevealedBlocks() const;
+
+		
+
+		/// Obtain the size of blocks horizontally and vertically from the grid.
+		sf::Vector2i GetSize() const;
+		
+		/// Obtain the number of bombs contained in the grid
+		int GetNumberOfBombs() const;
 
 	private:
 		/**
@@ -137,6 +145,8 @@ namespace ks
 
 		///amount of clicked and revealed blocks
 		int revealedBlocks;
+
+		int numberOfBombs;
 	};
 }
 

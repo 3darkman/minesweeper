@@ -1,10 +1,22 @@
 #include "GameScene.h"
 #include "DEFINITIONS.h"
 #include "GameOverScene.h"
+#include "MainMenuScene.h"
 
 ks::GameScene::GameScene(GameDataRef data) : data(data)
 {
-	
+	switch (this->data->difficult)
+	{
+	case GameDifficult::Intermediate:
+		this->data->window.create(sf::VideoMode(INTERMEDIATE_SCREEN_WIDTH, INTERMEDIATE_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
+		break;
+	case GameDifficult::Beginner:
+		this->data->window.create(sf::VideoMode(BEGINNER_SCREEN_WIDTH, BEGINNER_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
+		break;
+	case GameDifficult::Expert:
+		this->data->window.create(sf::VideoMode(EXPERT_SCREEN_WIDTH, EXPERT_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
+		break;
+	}
 }
 
 void ks::GameScene::LoadAssets() const
@@ -23,23 +35,45 @@ void ks::GameScene::LoadAssets() const
 	this->data->assets.LoadTexture(SPRITE_BLOCK_06_NAME, SPRITE_BLOCK_06_FILEPATH);
 	this->data->assets.LoadTexture(SPRITE_BLOCK_07_NAME, SPRITE_BLOCK_07_FILEPATH);
 	this->data->assets.LoadTexture(SPRITE_BLOCK_08_NAME, SPRITE_BLOCK_08_FILEPATH);
+	this->data->assets.LoadTexture(SPRITE_LOGO_NAME, SPRITE_LOGO_FILEPATH);
 	this->data->assets.LoadFont(FONT_GAME_SANS_NAME, FONT_GAME_SANS_FILEPATH);
+	
+}
+
+void ks::GameScene::CreateGrid()
+{
+	switch (this->data->difficult)
+	{
+	case GameDifficult::Intermediate:
+		this->grid = new Grid(INTERMEDIATE_GRID_COLUMNS, INTERMEDIATE_GRID_ROWS, sf::Vector2i(0, 88), this->data);
+		break;
+	case GameDifficult::Beginner:
+		this->grid = new Grid(BEGINNER_GRID_COLUMNS, BEGINNER_GRID_ROWS, sf::Vector2i(0, 88), this->data);
+		break;
+	case GameDifficult::Expert:
+		this->grid = new Grid(EXPERT_GRID_COLUMNS, EXPERT_GRID_ROWS, sf::Vector2i(0, 88), this->data);
+		break;
+	}
+	this->grid->Init();
 }
 
 void ks::GameScene::Init()
 {
 	this->LoadAssets();
-
+	canClickToRestart = false;
 	state = GameState::Running;
 
-	this->grid = new Grid(GRID_COLUMNS, GRID_ROWS, sf::Vector2i(0, 88), this->data);
-	this->grid->Init();
+	this->logo.setTexture(this->data->assets.GetTexture(SPRITE_LOGO_NAME));
+	this->logo.setScale(0.35, 0.35);
+	this->AnchorObject(this->data->window, this->logo, this->logo.getGlobalBounds(), AnchorType::TopRight, sf::Vector2i(-5, 5));
 
-	this->victoryText = new sf::Text("You Won!", this->data->assets.GetFont(FONT_GAME_SANS_NAME));
-	this->AnchorObject(this->data->window, *this->victoryText, this->victoryText->getLocalBounds(), AnchorType::Top, sf::Vector2i(0, 20));
+	this->CreateGrid();
+
+	this->victoryText = new sf::Text("You Won!", this->data->assets.GetFont(FONT_GAME_SANS_NAME), 25);
+	this->AnchorObject(this->data->window, *this->victoryText, this->victoryText->getLocalBounds(), AnchorType::TopLeft, sf::Vector2i(5, 20));
 
 	this->hintText = new sf::Text("press <Enter>", this->data->assets.GetFont(FONT_GAME_SANS_NAME), 10);
-	this->AnchorObject(this->data->window, *this->hintText, this->hintText->getLocalBounds(), AnchorType::Top, sf::Vector2i(0, 60));
+	this->AnchorObject(this->data->window, *this->hintText, this->hintText->getLocalBounds(), AnchorType::TopLeft, sf::Vector2i(5, 60));
 	this->hintText->setStyle(sf::Text::Style::Italic);
 } 
 
@@ -53,8 +87,9 @@ void ks::GameScene::CheckEndGame(bool isLastClickABomb)
 	}
 	else
 	{
-		if (this->grid->GetRevealedBlocks() >= ((GRID_COLUMNS * GRID_ROWS) - NUMBER_OF_BOMBS))
+		if (this->grid->GetRevealedBlocks() >= ((this->grid->GetSize().x * this->grid->GetSize().y) - this->grid->GetNumberOfBombs()))
 		{
+			this->clock.restart();
 			this->state = GameState::Won;
 		}
 	}
@@ -70,10 +105,10 @@ void ks::GameScene::HandleInput()
 		{
 			this->data->window.close();
 		}
-
-		if (event.type == sf::Event::MouseButtonPressed)
+		
+		if (this->state == GameState::Running)
 		{
-			if (this->state == GameState::Running)
+			if (event.type == sf::Event::MouseButtonPressed)
 			{
 				if (this->data->input.IsRectClicked(this->grid->GetGlobalBounds(), sf::Mouse::Left, this->data->window, event.mouseButton))
 				{
@@ -87,6 +122,14 @@ void ks::GameScene::HandleInput()
 					this->grid->PutFlag(this->data->input.GetMousePosition(this->data->window));
 				}
 			}
+
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Escape)
+				{
+					this->data->scenes.AddScene(SceneRef(new GameScene(this->data)), true);
+				}
+			}
 		}
 
 		if (this->state == GameState::Won)
@@ -95,8 +138,12 @@ void ks::GameScene::HandleInput()
 			{
 				if (event.key.code == sf::Keyboard::Enter)
 				{
-					this->data->scenes.AddScene(SceneRef(new GameScene(this->data)), true);
+					this->data->scenes.AddScene(SceneRef(new MainMenuScene(this->data)), true);
 				}
+			}
+			if (event.type == sf::Event::MouseButtonPressed && canClickToRestart)
+			{
+				this->data->scenes.AddScene(SceneRef(new MainMenuScene(this->data)), true);
 			}
 		}
 	}
@@ -104,11 +151,18 @@ void ks::GameScene::HandleInput()
 
 void ks::GameScene::Update(float deltaTime)
 {
-	if (this->state == GameState::Lose)
+	if (this->state != GameState::Running)
 	{
-		if(this->clock.getElapsedTime().asSeconds() > TIME_BEFORE_SHOW_GAME_OVER)
+		if(this->clock.getElapsedTime().asSeconds() >= TIME_BEFORE_SHOW_GAME_OVER)
 		{
-			this->data->scenes.AddScene(SceneRef(new GameOverScene(this->data)), true);
+			if (this->state == GameState::Lose)
+			{
+				this->data->scenes.AddScene(SceneRef(new GameOverScene(this->data)), true);
+			}
+			if (this->state == GameState::Won)
+			{
+				canClickToRestart = true;
+			}
 		}
 	}
 	
@@ -116,12 +170,15 @@ void ks::GameScene::Update(float deltaTime)
 
 void ks::GameScene::Draw(float deltaTime)
 {
-	this->data->window.clear(sf::Color::Black);
+	this->data->window.clear(sf::Color(45,43,43));
 
 	this->grid->Draw(deltaTime);
+	
+	this->data->window.draw(this->logo);
 
 	if (this->state == GameState::Won)
 	{
+		
 		this->data->window.draw(*this->victoryText);
 		this->data->window.draw(*this->hintText);
 	}

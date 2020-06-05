@@ -1,12 +1,15 @@
 #include "Game.h"
-
-#include "GameScene.h"
+#include <iostream>
+#include "MainMenuScene.h"
+#include <SFML/Window.hpp>
 
 ks::Game::Game(int width, int height, std::string title)
 {
+	srand(time(0));
+	this->data->title = title;
 	this->data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
 
-	this->data->scenes.AddScene(SceneRef(new GameScene(this->data)));
+	this->data->scenes.AddScene(SceneRef(new MainMenuScene(this->data)), true);
 	
 	this->Run();
 }
@@ -15,7 +18,7 @@ void ks::Game::Run()
 {
 	float newTime, frameTime;
 
-	float currentTime = this->_clock.getElapsedTime().asSeconds();
+	float currentTime = this->clock.getElapsedTime().asSeconds();
 
 	float accumulator = 0.0f;
 
@@ -23,7 +26,7 @@ void ks::Game::Run()
 	{
 		this->data->scenes.ProcessSceneChanges();
 		
-		newTime = this->_clock.getElapsedTime().asSeconds();
+		newTime = this->clock.getElapsedTime().asSeconds();
 		frameTime = newTime - currentTime;
 
 		if (frameTime > 0.25f)

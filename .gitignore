@@ -33,3 +33,6 @@
 Minesweeper/.vs/
 .vs/
 Minesweeper/Debug/
+Minesweeper/Release/
+Minesweeper/Minesweeper/Release/
+Minesweeper/Minesweeper/Debug/

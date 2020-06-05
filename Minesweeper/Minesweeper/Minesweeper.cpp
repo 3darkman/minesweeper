@@ -5,7 +5,7 @@
 
 int main()
 {
-	ks::Game(SCREEN_WIDTH, SCREEN_HEIGHT, "Minesweeper");
+	ks::Game(INTERMEDIATE_SCREEN_WIDTH, INTERMEDIATE_SCREEN_HEIGHT, "Minesweeper");
 
 	return EXIT_SUCCESS;
 }

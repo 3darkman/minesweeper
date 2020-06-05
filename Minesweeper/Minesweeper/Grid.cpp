@@ -45,8 +45,22 @@ void ks::Grid::InitializeBlocks(const std::vector<sf::Vector2i>& bombs)
 void ks::Grid::Init()
 {
 	this->revealedBlocks = 0;
-	auto bombs = this->SelectRandomPositions(NUMBER_OF_BOMBS);
+
+	std::vector<sf::Vector2i> bombs;
 	
+	switch (this->data->difficult)
+	{
+	case GameDifficult::Intermediate:
+		this->numberOfBombs = INTERMEDIATE_NUMBER_OF_BOMBS;
+		break;
+	case GameDifficult::Beginner:
+		this->numberOfBombs = BEGINNER_NUMBER_OF_BOMBS;
+		break;
+	case GameDifficult::Expert:
+		this->numberOfBombs = EXPERT_NUMBER_OF_BOMBS;
+		break;
+	}
+	bombs = this->SelectRandomPositions(numberOfBombs);
 	this->CreateBlocks();
 
 	this->InitializeBlocks(bombs);
@@ -132,9 +146,19 @@ sf::IntRect ks::Grid::GetGlobalBounds() const
 	return sf::IntRect(this->position, sf::Vector2i(this->size.x * GRID_BLOCK_SIZE, this->size.y * GRID_BLOCK_SIZE));
 }
 
-int ks::Grid::GetRevealedBlocks()
+int ks::Grid::GetRevealedBlocks() const
 {
 	return this->revealedBlocks;
+}
+
+sf::Vector2i ks::Grid::GetSize() const
+{
+	return this->size;
+}
+
+int ks::Grid::GetNumberOfBombs() const
+{
+	return this->numberOfBombs;
 }
 
 std::vector<sf::Vector2i> ks::Grid::SelectRandomPositions(int numberOfPositions) const
