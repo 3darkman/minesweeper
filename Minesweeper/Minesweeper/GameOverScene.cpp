@@ -1,6 +1,5 @@
 #include "GameOverScene.h"
 #include "DEFINITIONS.h"
-#include "GameScene.h"
 #include "MainMenuScene.h"
 
 ks::GameOverScene::GameOverScene(GameDataRef data) : data(data)
@@ -8,6 +7,7 @@ ks::GameOverScene::GameOverScene(GameDataRef data) : data(data)
 	this->gameOverText = nullptr;
 	this->hintText = nullptr;
 	this->data->window.create(sf::VideoMode(INTERMEDIATE_SCREEN_WIDTH, INTERMEDIATE_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
+	this->data->window.setFramerateLimit(DEFAULT_FRAME_RATE);
 }
 
 void ks::GameOverScene::Init()

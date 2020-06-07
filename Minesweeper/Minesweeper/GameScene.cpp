@@ -21,6 +21,7 @@ ks::GameScene::GameScene(GameDataRef data) : data(data)
 		this->data->window.create(sf::VideoMode(EXPERT_SCREEN_WIDTH, EXPERT_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
 		break;
 	}
+	this->data->window.setFramerateLimit(DEFAULT_FRAME_RATE);
 }
 
 ks::GameScene::~GameScene()

@@ -6,6 +6,7 @@
 ks::MainMenuScene::MainMenuScene(GameDataRef data) : data(data)
 {
 	this->data->window.create(sf::VideoMode(INTERMEDIATE_SCREEN_WIDTH, INTERMEDIATE_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
+	this->data->window.setFramerateLimit(DEFAULT_FRAME_RATE);
 }
 
 void ks::MainMenuScene::Init()

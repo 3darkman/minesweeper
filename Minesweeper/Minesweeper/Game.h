@@ -23,9 +23,6 @@ namespace ks
 		Game(int width, int height, std::string title);
 
 	private:
-		/// standard time that a frame should last to maintain the fps standard
-		const float deltaTime = 1.0f / 60.0f;
-
 		sf::Clock clock;
 
 		
@@ -36,7 +33,7 @@ namespace ks
 		 * Performs the standard game loop and updates the scenes at each frame,
 		 * keeping the number of frames per second stable.
 		 */
-		void Run();
+		void Run() const;
 	};
 }
 

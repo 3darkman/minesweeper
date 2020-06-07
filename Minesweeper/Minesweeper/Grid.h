@@ -157,4 +157,3 @@ namespace ks
 		int numberOfBombs;
 	};
 }
-
