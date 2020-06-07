@@ -5,6 +5,10 @@
 
 ks::GameScene::GameScene(GameDataRef data) : data(data)
 {
+	this->hintText = nullptr;
+	this->victoryText = nullptr;
+	this->canClickToRestart = false;
+	this->state = GameState::Running;
 	switch (this->data->difficult)
 	{
 	case GameDifficult::Intermediate:
@@ -17,6 +21,13 @@ ks::GameScene::GameScene(GameDataRef data) : data(data)
 		this->data->window.create(sf::VideoMode(EXPERT_SCREEN_WIDTH, EXPERT_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
 		break;
 	}
+}
+
+ks::GameScene::~GameScene()
+{
+	delete this->grid;
+	delete this->victoryText;
+	delete this->hintText;
 }
 
 void ks::GameScene::LoadAssets() const
@@ -60,11 +71,10 @@ void ks::GameScene::CreateGrid()
 void ks::GameScene::Init()
 {
 	this->LoadAssets();
-	canClickToRestart = false;
 	state = GameState::Running;
 
 	this->logo.setTexture(this->data->assets.GetTexture(SPRITE_LOGO_NAME));
-	this->logo.setScale(0.35, 0.35);
+	this->logo.setScale(0.35f, 0.35f);
 	this->AnchorObject(this->data->window, this->logo, this->logo.getGlobalBounds(), AnchorType::TopRight, sf::Vector2i(-5, 5));
 
 	this->CreateGrid();
@@ -153,7 +163,7 @@ void ks::GameScene::Update(float deltaTime)
 {
 	if (this->state != GameState::Running)
 	{
-		if(this->clock.getElapsedTime().asSeconds() >= TIME_BEFORE_SHOW_GAME_OVER)
+		if(this->clock.getElapsedTime().asSeconds() >= PAUSE_TIME_AFTER_GAME_END)
 		{
 			if (this->state == GameState::Lose)
 			{

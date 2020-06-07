@@ -1,5 +1,7 @@
 #pragma once
 
+#define AUTHOR_NAME "Kirlian Silvestre"
+
 #define GRID_BLOCK_SIZE 32
 
 #define BEGINNER_SCREEN_WIDTH 256
@@ -20,7 +22,7 @@
 #define INTERMEDIATE_NUMBER_OF_BOMBS 40
 #define EXPERT_NUMBER_OF_BOMBS 99
 
-#define TIME_BEFORE_SHOW_GAME_OVER  1
+#define PAUSE_TIME_AFTER_GAME_END  2
 
 #define SPRITE_BLOCK_01_FILEPATH "graphics/block_1.png"
 #define SPRITE_BLOCK_02_FILEPATH "graphics/block_2.png"

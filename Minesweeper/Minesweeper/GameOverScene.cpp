@@ -5,6 +5,8 @@
 
 ks::GameOverScene::GameOverScene(GameDataRef data) : data(data)
 {
+	this->gameOverText = nullptr;
+	this->hintText = nullptr;
 	this->data->window.create(sf::VideoMode(INTERMEDIATE_SCREEN_WIDTH, INTERMEDIATE_SCREEN_HEIGHT), this->data->title, sf::Style::Close | sf::Style::Titlebar);
 }
 
@@ -44,10 +46,6 @@ void ks::GameOverScene::HandleInput()
 			this->data->scenes.AddScene(SceneRef(new MainMenuScene(this->data)), true);
 		}
 	}
-}
-
-void ks::GameOverScene::Update(float deltaTime)
-{
 }
 
 void ks::GameOverScene::Draw(float deltaTime)

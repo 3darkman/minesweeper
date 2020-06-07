@@ -7,7 +7,7 @@ void ks::GridBlock::Init()
 	position.x = gridPosition.x * GRID_BLOCK_SIZE + this->gridParent->GetPosition().x;
 	position.y = gridPosition.y * GRID_BLOCK_SIZE + this->gridParent->GetPosition().y;
 	this->sprite.setPosition(position);
-	ChangeState(BlockState::Hidden, false);
+	
 }
 
 void ks::GridBlock::Draw(float deltaTime)
@@ -27,7 +27,7 @@ bool ks::GridBlock::Flip(bool canExplodeBombs)
 {
 	if (this->state == BlockState::Hidden)
 	{
-		this->ChangeState(this->state == BlockState::Hidden ? BlockState::FaceUp : BlockState::Hidden, canExplodeBombs);
+		this->ChangeState(BlockState::FaceUp, canExplodeBombs);
 		return true;
 	}
 	return false;
@@ -59,6 +59,11 @@ void ks::GridBlock::Show(bool ignoreFlag)
 void ks::GridBlock::SetType(BlockType type)
 {
 	this->type = type;
+	
+	if (this->state == BlockState::FaceUp)
+	{
+		this->ChangeSprite(false);
+	}
 }
 
 ks::BlockType ks::GridBlock::GetType() const
@@ -142,14 +147,11 @@ ks::GridBlock::GridBlock(Grid* grid, sf::Vector2i gridPosition, BlockType type, 
 	this->gridParent = grid;
 	this->type = type;
 	this->gridPosition = gridPosition;
+	ChangeState(BlockState::Hidden, false);
 }
 
-ks::GridBlock::GridBlock(Grid* grid, sf::Vector2i gridPosition, GameDataRef data) : data(data)
+ks::GridBlock::GridBlock(Grid* grid, sf::Vector2i gridPosition, GameDataRef data) : GridBlock(grid, gridPosition, BlockType::Empty, data)
 {
-	this->neighboringBombs = 0;
-	this->gridParent = grid;
-	this->type = BlockType::Empty;
-	this->gridPosition = gridPosition;
 }
 
 void ks::GridBlock::ChangeSprite(bool canExplodeBombs)

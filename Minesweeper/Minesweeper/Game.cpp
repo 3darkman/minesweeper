@@ -5,7 +5,7 @@
 
 ks::Game::Game(int width, int height, std::string title)
 {
-	srand(time(0));
+	srand(static_cast<unsigned int>(time(0)));
 	this->data->title = title;
 	this->data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
 

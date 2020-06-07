@@ -4,7 +4,7 @@
 namespace ks
 {
 	/**
-	 * Implementation of the grid of a minesweeper game by Kirlian Silvestre.
+	 * Implementation of the grid of a minesweeper game.
 	 *
 	 * It creates, types and manages its blocks that are represented by GridBlock objects.
 	 */
@@ -69,20 +69,26 @@ namespace ks
 		 * Returns the grid position in the window, based on its top left.
 		 */
 		sf::Vector2i GetPosition() const;
+		
 		/**
 		 * Obtain a rectangular representation of the grid, based on its
 		 * position on the window and the number of blocks the grid has.
 		 */
 		sf::IntRect GetGlobalBounds() const;
 
+		/**
+		 * Get the number of blocks already revealed
+		 */
 		int GetRevealedBlocks() const;
 
-		
-
-		/// Obtain the size of blocks horizontally and vertically from the grid.
+		/**
+		 * Get the size of blocks horizontally and vertically from the grid.
+		 */
 		sf::Vector2i GetSize() const;
 		
-		/// Obtain the number of bombs contained in the grid
+		/**
+		 * Get the number of bombs contained in the grid
+		 */
 		int GetNumberOfBombs() const;
 
 	private:
@@ -116,6 +122,7 @@ namespace ks
 
 		/**
 		 * Flip the current block, and if it is empty, flip all neighbors that are not a bomb.
+		 * it keeps doing it recursively until it finds no more empty space.
 		 *
 		 * @param block The current block
 		 * @return If the current block is a bomb, it returns true, it returns false otherwise.
@@ -146,6 +153,7 @@ namespace ks
 		///amount of clicked and revealed blocks
 		int revealedBlocks;
 
+		/// amount of bombs on grid
 		int numberOfBombs;
 	};
 }

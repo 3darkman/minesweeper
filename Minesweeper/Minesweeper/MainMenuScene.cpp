@@ -32,7 +32,7 @@ void ks::MainMenuScene::Init()
 	this->expertButton.setTexture(this->data->assets.GetTexture(SPRITE_EXPERT_BUTTON_NAME));
 	this->AnchorObject(this->data->window, this->expertButton, this->expertButton.getGlobalBounds(), AnchorType::Top, sf::Vector2i(0, y));
 
-	this->authorButton = new sf::Text("Kirlian Silvestre", this->data->assets.GetFont(FONT_JET_BRAINS_NAME), 15);
+	this->authorButton = new sf::Text(AUTHOR_NAME, this->data->assets.GetFont(FONT_JET_BRAINS_NAME), 15);
 	this->AnchorObject(this->data->window, *this->authorButton, this->authorButton->getGlobalBounds(), AnchorType::Bottom, sf::Vector2i(0, -20));
 	
 }
@@ -69,10 +69,6 @@ void ks::MainMenuScene::HandleInput()
 			}
 		}
 	}
-}
-
-void ks::MainMenuScene::Update(float deltaTime)
-{
 }
 
 void ks::MainMenuScene::Draw(float deltaTime)

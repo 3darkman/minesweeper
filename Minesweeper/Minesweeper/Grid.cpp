@@ -75,9 +75,9 @@ void ks::Grid::PutFlag(const sf::Vector2i position)
 
 void ks::Grid::Draw(float deltaTime)
 {
-	for (int x = 0; x < this->gridBlocks.size(); x++)
+	for (size_t x = 0; x < this->gridBlocks.size(); x++)
 	{
-		for (int y = 0; y < this->gridBlocks[x].size(); y++)
+		for (size_t y = 0; y < this->gridBlocks[x].size(); y++)
 		{
 			this->gridBlocks[x][y].Draw(deltaTime);
 		}
@@ -214,6 +214,8 @@ void ks::Grid::GetNeighbors(sf::Vector2i position, std::vector<GridBlock*>& neig
 
 ks::Grid::Grid(int columns, int rows, sf::Vector2i position, GameDataRef data) : data(data)
 {
+	this->revealedBlocks = 0;
+	this->numberOfBombs = 0;
 	this->size.x = columns;
 	this->size.y = rows;
 	this->position = position;
